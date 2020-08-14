@@ -100,15 +100,13 @@ app.post("/api/register", (req, res) => {
   });
 });
 
-app.get("/api/like", isLoggedIn, (req, res) => {
-  database
-    .getLikesFromUser(req.session.userId)
-    .then((data) => res.send({ data: data }))
-    .catch((e) => null);
+app.get("/api/like", (req, res) => {
+  database.getLikesFromUser().then((data) => res.send({ data: data }));
 });
 
 //Like a tweet
 app.post("/api/like", isLoggedIn, (req, res) => {
+  console.log("server", req.session.userId);
   database
     .likeTweet(req.body.tweet_id, req.session.userId)
     .then((data) => res.send({ data: data }))
@@ -143,7 +141,10 @@ app.delete("/api/follow/:id", isLoggedIn, (req, res) => {
 app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
   login(email, password)
-    .then((user) => res.send({ user }))
+    .then((user) => {
+      req.session.userId = user.id;
+      res.send({ user });
+    })
     .catch((e) => res.send());
 });
 

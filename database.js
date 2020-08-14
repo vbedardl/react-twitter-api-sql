@@ -163,14 +163,12 @@ const unFollowUser = function (followed_id, follower_id) {
 };
 exports.unFollowUser - unFollowUser;
 
-const getLikesFromUser = function (user_id) {
+const getLikesFromUser = function () {
   return db
     .query(
       `
     SELECT * FROM likes
-    WHERE user_id = $1
-  `,
-      [user_id]
+  `
     )
     .then((res) => res.rows)
     .catch((e) => null);
