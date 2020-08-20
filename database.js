@@ -4,7 +4,7 @@ const getTweetLists = function () {
   return db
     .query(
       `
-      SELECT content as text, creation_date, name, email as handle, profile_image, tweets.id, creation_date, COUNT(likes.user_id) as likes  
+      SELECT content as text, creation_date, name, email as handle, profile_image, tweets.id, creation_date, owner_id,  COUNT(likes.user_id) as likes  
       FROM tweets
       JOIN users ON users.id = owner_id
       LEFT JOIN likes ON tweet_id = tweets.id
@@ -127,6 +127,7 @@ const dislikeTweet = function (tweet_id, user_id) {
       `
     DELETE FROM likes 
     WHERE tweet_id = $1 AND user_id = $2
+    RETURNING *
   `,
       [tweet_id, user_id]
     )
@@ -155,13 +156,14 @@ const unFollowUser = function (followed_id, follower_id) {
       `
     DELETE FROM followings 
     WHERE followed_id = $1 AND follower_id = $2
+    RETURNING *
   `,
       [followed_id, follower_id]
     )
     .then((res) => res.rows[0])
     .catch((e) => null);
 };
-exports.unFollowUser - unFollowUser;
+exports.unFollowUser = unFollowUser;
 
 const getLikesFromUser = function () {
   return db
@@ -174,3 +176,15 @@ const getLikesFromUser = function () {
     .catch((e) => null);
 };
 exports.getLikesFromUser = getLikesFromUser;
+
+const getFollowingData = function () {
+  return db
+    .query(
+      `
+    SELECT * FROM followings
+  `
+    )
+    .then((res) => res.rows)
+    .catch((e) => null);
+};
+exports.getFollowingData = getFollowingData;

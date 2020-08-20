@@ -72,6 +72,13 @@ app.get("/api/comments", (req, res) => {
     .catch((e) => null);
 });
 
+app.get("/api/followings", (req, res) => {
+  database
+    .getFollowingData()
+    .then((data) => res.send({ data: data }))
+    .catch((e) => null);
+});
+
 //Add Comment to a tweet
 app.post("/api/comments", isLoggedIn, (req, res) => {
   database
@@ -105,10 +112,9 @@ app.get("/api/like", (req, res) => {
 });
 
 //Like a tweet
-app.post("/api/like", isLoggedIn, (req, res) => {
-  console.log("server", req.session.userId);
+app.post("/api/like/:id", isLoggedIn, (req, res) => {
   database
-    .likeTweet(req.body.tweet_id, req.session.userId)
+    .likeTweet(req.params.id, req.session.userId)
     .then((data) => res.send({ data: data }))
     .catch((e) => null);
 });

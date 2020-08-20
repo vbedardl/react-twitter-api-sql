@@ -13,8 +13,8 @@ INSERT INTO comments (content, tweet_id, owner_id)
 VALUES
   ('No way! me to', 1, 2);
 
-INSERT INTO followings (follower_id, followed_id)
-VALUES (1, 2);
+-- INSERT INTO followings (follower_id, followed_id)
+-- VALUES (1, 2);
 
 INSERT INTO likes (user_id, tweet_id)
 VALUES (1, 1),
